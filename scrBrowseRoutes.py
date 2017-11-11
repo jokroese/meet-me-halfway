@@ -177,8 +177,28 @@ quotearray = []
 params1 = [country, currency, locale, originPlace1, destinationPlace, outboundPartialDate]
 params2 = [country, currency, locale, originPlace2, destinationPlace, outboundPartialDate]
 
-qdict1 = quotesDict(generateURL(browseQuotesURL,params1))
-qdict2 = quotesDict(generateURL(browseQuotesURL,params2))
+qdict1,placeZip = quotesDict(generateURL(browseQuotesURL,params1))
+qdict2,placeZip = quotesDict(generateURL(browseQuotesURL,params2))
 
 print(qdict1)
+
+#%%
+destin1 = [[i['DestinationId'],i['Price']] for i in qdict1]
+destin2 = [[i['DestinationId'],i['Price']] for i in qdict2]
+mutualdestin = list(set([i[0] for i in destin1]).intersection([i[0] for i in destin2]))
+price = 0
+"""for i in list(mutualdestin):
+    destin1.index(i)"""
+
+def get_place_name_from_code(code):
+    global placeZip
+    for element in placeZip:
+        if element[1] == code:
+            return element[0]
+    return False
+
+get_place_name_from_code(destin1[0][0])
+
+
+
 
