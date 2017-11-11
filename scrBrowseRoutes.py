@@ -5,7 +5,6 @@ import json
 
 api_key = 'ha177649362715475514428886582394'
 refurl = "http://partners.api.skyscanner.net/apiservices/"
-browseQuotesURL = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0'
 
 #%%Define some functions
 def convertCountry(zippedList,name):
@@ -22,6 +21,7 @@ def suggester(query):
     autoSuggJSON = json.loads(autoSuggest.text)
     return [i['PlaceName'] for i in autoSuggJSON['Places']]
 
+<<<<<<< HEAD
 def generateURL(basicurl,params):
     """Creates the working url we want"""
     for element in params:
@@ -60,6 +60,8 @@ def enterName(airportinfo):
                 print(i)
 
 
+=======
+>>>>>>> parent of 4fcea60... Merge remote-tracking branch 'origin/master'
 #%% Get info on locales
 locdata = {'Code':"codeval","Name":"nameval"}
 localesreq = requests.get(refurl + "reference/v1.0/locales?apiKey=" + api_key, data= locdata)
@@ -71,7 +73,7 @@ while i<len(localesreq['Locales']):
     localenames.append(localesreq["Locales"][i]["Name"])
     localecodes.append(localesreq['Locales'][i]["Code"])
     i+=1
-locale = 'en-GB'
+locale = localecodes[12]
 
 currency = 'USD'
 currencies = requests.get(refurl+"reference/v1.0/currencies?apiKey="+api_key)
@@ -94,7 +96,7 @@ countriesdict = {"Codes":marketcodes,
                 "Names":marketnames
                 }
 
-name = 'France'
+name = 'Andorrrb'
 """Convert the country to a code which we can use"""
 try:
     convertCountry(countriesZip,name)
@@ -107,58 +109,15 @@ except:
     else: 
         print('Did you mean...')
         suggester(name)
-        
-#%%Get places
-places = requests.get(refurl+"/geo/v1.0?apiKey="+api_key)
-places = json.loads(places.text)
-airportids = []
-airportlocs = []
-airportnames = []
-airportcities = []
-airportcountries = []
-
-for continent in places["Continents"]:
-    for country in continent["Countries"]:
-        for city in country["Cities"]:
-            for airport in city["Airports"]:
-                airportids.append(airport["Id"])
-                airportlocs.append(airport["Location"])
-                airportnames.append(airport["Name"])
-                airportcities.append(city["Name"])
-                airportcountries.append(city["CountryId"])               
-airportinfo = {"AirportID":airportids,
-               "Airport Location":airportlocs,
-               "Airport Name":airportnames,
-               "Airport City":airportcities,
-               "Airport Country":airportcountries
-              }
-#print(airportinfo)
 
 #%%Browse routes basic
-country = 'US'
+country = 'RU'
 locale = 'en-GB'
 currency = 'USD'
-originPlace = 'US'
-destinationPlace = 'Anywhere'
+originPlace = 'RU'
+destinationPlace = 'UK'
 outboundPartialDate = '2017-11-22'
 inboundPartialDate = ''
-
-country = marketcodes[4]
-k = 1430 #Manchester, MAN
-q = 922 #LRT
-print(k,q)
-originPlace = airportids[k]
-destinationPlace = "anywhere"   #airportids[q]
-print("Going from "+ airportnames[k] + " in " + 
-      marketnames[marketcodes.index(airportcountries[k])]
-      + " to " + airportnames[q] + " in " + 
-      marketnames[marketcodes.index(airportcountries[q])])
-outboundPartialDate = "2017-11-12"
-params = [country, currency, locale, originPlace, destinationPlace, outboundPartialDate]
-browsequotes =  requests.get(generateURL(browseQuotesURL,params))
-browsequotes = json.loads(browsequotes.text)
-print(browsequotes)
-
 
 #%%Faulty
 #def browseDict(country,locale,currency,originPlace,destinationPlace,outboundPartialDate,inboundPartialDate):
@@ -175,19 +134,20 @@ print(browsequotes)
 #    return browseDict
 
 #%% Browse quotes basic
-def quotesDict(browsingurl):
+def quotesDict(country,locale,currency,originPlace,destinationPlace,outboundPartialDate,inboundPartialDate):
     """Generates a usable list of quotes from an input"""
-    browseQuotes = requests.get(browsingurl)
+    browseQuotes = requests.get(refurl+"browsequotes/v1.0/"+country+"/"+currency+"/"+locale+"/"+originPlace+"/"+destinationPlace+"/"+outboundPartialDate+"/"+inboundPartialDate+"?apiKey="+api_key)
     quotesJSON = json.loads(browseQuotes.text)
     quotesDict = []
     for i in quotesJSON['Quotes']:
-        #print(i)
+        print(i)
         i = i
         smallDict = {'Price':i['MinPrice'],
                      'OriginId':i['OutboundLeg']['OriginId'],
                       'DepartureDate':i['OutboundLeg']['DepartureDate'],
                       'DestinationId':i['OutboundLeg']['DestinationId']}
         quotesDict.append(smallDict)
+<<<<<<< HEAD
     placeZip = []
     for i in quotesJSON['Places']:
         placeZip.append([i['Name'],i['PlaceId']])
@@ -234,6 +194,11 @@ def findMutual(qdict1,qdict2):
     minPriceIndex = prices.index(min(prices))
     bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex])
     return bestDest
+=======
+    return quotesDict
+
+
+>>>>>>> parent of 4fcea60... Merge remote-tracking branch 'origin/master'
 
 
 
