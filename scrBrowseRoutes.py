@@ -24,10 +24,41 @@ def suggester(query):
 
 def generateURL(basicurl,params):
     """Creates the working url we want"""
-    for element in params1:
+    for element in params:
         basicurl = basicurl + '/' + element
     basicurl = basicurl + '?apiKey=' + api_key
     return basicurl
+
+def get_place_name_from_code(code):
+    global placeZip
+    for element in placeZip:
+        if element[1] == code:
+            return element[0]
+    return False
+
+def get_code_from_name(airportinfo,name):
+    return airportinfo['AirportID'][airportinfo['Airport Name'].index(str(name))]
+
+def get_name_from_code(airportinfo,name):
+    return airportinfo['Airport Name'][airportinfo['AirportID'].index(str(name))]
+
+def enterName(airportinfo):
+    airport = input('Enter the airport you are planning to fly from... \n')
+    try:
+        get_code_from_name(airportinfo,airport)
+        return get_code_from_name(airportinfo,airport)
+    except:
+        #if not a recognised name, suggest names which they may have meant
+        print(airport+' is not a recognised place')
+        if suggester(airport) is None:
+            print('Did you mean....')
+            suggester(airport[0:4])
+        else: 
+            print('Did you mean...')
+            suggestions = suggester(airport)
+            for i in suggestions:
+                print(i)
+
 
 #%% Get info on locales
 locdata = {'Code':"codeval","Name":"nameval"}
@@ -164,14 +195,16 @@ def quotesDict(browsingurl):
 
 #%%Generate all quotes for both origins
 k = 1430 #Manchester
-q = 84   # Second Origin Index
+q = 1816    #Cape town
+q = airportids.index('SFO') #san francisco international airport
+q = airportids.index('DFW') #dallas fort worth
 
 country = 'UK'
 currency = 'GBP'
 originPlace1 = airportids[k]
 originPlace2 = airportids[q]
 destinationPlace = "anywhere"
-outboundPartialDate = "2017-11-12"
+outboundPartialDate = "2017-11"
 quotearray = []
 
 params1 = [country, currency, locale, originPlace1, destinationPlace, outboundPartialDate]
@@ -180,24 +213,27 @@ params2 = [country, currency, locale, originPlace2, destinationPlace, outboundPa
 qdict1,placeZip = quotesDict(generateURL(browseQuotesURL,params1))
 qdict2,placeZip = quotesDict(generateURL(browseQuotesURL,params2))
 
-print(qdict1)
-
 #%%
-destin1 = [[i['DestinationId'],i['Price']] for i in qdict1]
-destin2 = [[i['DestinationId'],i['Price']] for i in qdict2]
-mutualdestin = list(set([i[0] for i in destin1]).intersection([i[0] for i in destin2]))
-price = 0
-"""for i in list(mutualdestin):
-    destin1.index(i)"""
 
-def get_place_name_from_code(code):
-    global placeZip
-    for element in placeZip:
-        if element[1] == code:
-            return element[0]
-    return False
-
-get_place_name_from_code(destin1[0][0])
+def findMutual(qdict1,qdict2):
+    """Find the mutual city based on two dictionaries"""
+    destin1 = [i['DestinationId'] for i in qdict1]
+    prices1 = [i['Price'] for i in qdict1]
+    destin2 = [i['DestinationId'] for i in qdict2]
+    prices2 = [i['Price'] for i in qdict2]
+    mutualDest = list(set(destin1).intersection(destin2))
+    
+    mutualQuotes = []
+    for i in mutualDest:
+        index1 = destin1.index(i)
+        index2 = destin2.index(i)
+        templine = [destin1[index1], prices1[index1]+prices2[index2]]
+        mutualQuotes.append(templine)
+    
+    prices = [i[1] for i in mutualQuotes]
+    minPriceIndex = prices.index(min(prices))
+    bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex])
+    return bestDest
 
 
 
