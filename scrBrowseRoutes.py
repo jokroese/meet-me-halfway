@@ -32,7 +32,7 @@ while i<len(localesreq['Locales']):
     localenames.append(localesreq["Locales"][i]["Name"])
     localecodes.append(localesreq['Locales'][i]["Code"])
     i+=1
-locale = localecodes[12]
+locale = 'en-GB'
 
 currency = 'USD'
 currencies = requests.get(refurl+"reference/v1.0/currencies?apiKey="+api_key)
@@ -55,7 +55,7 @@ countriesdict = {"Codes":marketcodes,
                 "Names":marketnames
                 }
 
-name = 'Andorrrb'
+name = 'France'
 """Convert the country to a code which we can use"""
 try:
     convertCountry(countriesZip,name)
@@ -68,15 +68,62 @@ except:
     else: 
         print('Did you mean...')
         suggester(name)
+        
+#%%Get places
+places = requests.get(refurl+"/geo/v1.0?apiKey="+api_key)
+places = json.loads(places.text)
+airportids = []
+airportlocs = []
+airportnames = []
+airportcities = []
+airportcountries = []
+
+for continent in places["Continents"]:
+    for country in continent["Countries"]:
+        for city in country["Cities"]:
+            for airport in city["Airports"]:
+                airportids.append(airport["Id"])
+                airportlocs.append(airport["Location"])
+                airportnames.append(airport["Name"])
+                airportcities.append(city["Name"])
+                airportcountries.append(city["CountryId"])               
+airportinfo = {"AirportID":airportids,
+               "Airport Location":airportlocs,
+               "Airport Name":airportnames,
+               "Airport City":airportcities,
+               "Airport Country":airportcountries
+              }
+#print(airportinfo)
 
 #%%Browse routes basic
-country = 'RU'
+country = 'US'
 locale = 'en-GB'
 currency = 'USD'
-originPlace = 'RU'
-destinationPlace = 'UK'
+originPlace = 'US'
+destinationPlace = 'Anywhere'
 outboundPartialDate = '2017-11-22'
 inboundPartialDate = ''
+
+country = marketcodes[4]
+k = 1430 #Manchester, MAN
+q = 922 #LRT
+print(k,q)
+originPlace = airportids[k]
+destinationPlace = "anywhere"   #airportids[q]
+print("Going from "+ airportnames[k] + " in " + 
+      marketnames[marketcodes.index(airportcountries[k])]
+      + " to " + airportnames[q] + " in " + 
+      marketnames[marketcodes.index(airportcountries[q])])
+outboundPartialDate = "2017-11-12"
+params = [country, currency, locale, originPlace, destinationPlace, outboundPartialDate]
+requrl = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0'
+for element in params:
+    requrl = requrl + '/' + element
+requrl = requrl + '?apiKey=' + api_key
+browsequotes =  requests.get(requrl)
+browsequotes = json.loads(browsequotes.text)
+print(browsequotes)
+
 
 #%%Faulty
 #def browseDict(country,locale,currency,originPlace,destinationPlace,outboundPartialDate,inboundPartialDate):
