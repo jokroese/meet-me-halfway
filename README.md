@@ -2,7 +2,7 @@
 
 **Meet Me Halfway** is a website to help you meet your friends, long-lost family and clandestine lovers in the cheapest way possible.
 
-meetmehalfway.com
+meetmehalfway.net
 
 ### Skyscanner API
 
