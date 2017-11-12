@@ -19,10 +19,16 @@ if __name__ == "__main__":
     app.run()
 
 #--- Suggest place names when half-typed
-@app.route('/suggester')
+@app.route('/me')
 def suggester(query):
     """Returns suggestions if the input is incorrect"""
     #query = 'fran'
     autoSuggest = requests.get(refurl+"autosuggest/v1.0/RU/USD/en-GB?query="+query+"&apiKey="+api_key)
     autoSuggJSON = json.loads(autoSuggest.text)
     return [i['PlaceName'] for i in autoSuggJSON['Places']]
+
+
+#--- When form is submitted, run algorithm to find cheapest flight and bring to new page
+@app.route('/submit')
+def showSignUp():
+    return render_template('result.html')
