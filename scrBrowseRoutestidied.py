@@ -1,6 +1,6 @@
 import requests
 import json
-from getLiveInfoFunction import getLiveInfo
+
 def search_routes(originCode1,originCode2,depart_date,return_date,details):
     api_key = 'ha177649362715475514428886582394'
     refurl = "http://partners.api.skyscanner.net/apiservices/"

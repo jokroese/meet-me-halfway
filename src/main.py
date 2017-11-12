@@ -12,13 +12,17 @@ api_key = 'ha177649362715475514428886582394'
 refurl = "http://partners.api.skyscanner.net/apiservices/"
 
 #--- Basic setup of html
-@app.route("/",methods = ['GET','PUSH'])
+@app.route("/", methods=['GET','POST'])
 def main():
-	if request.method == 'PUSH':
+	print('Got into this function')
+	if request.method == 'POST':
+		print(request.form)
 		adict = request.form
-		best_dest,placeZip = search_routes(adict["me"],adict["you"],adict["depart"],adict["return"],["oneway","UK","GBP","en-GB","Anywhere"])
-		
-    return render_template('index.html')
+		best_dest,placeZip = search_routes(adict["me"],adict["you"],adict["departure"],adict["return"],["oneway","UK","GBP","en-GB","Anywhere"])
+		print("Hi")
+		print(best_dest)
+		print("Hello")
+	return render_template('index.html')
 
 #--- Suggest place names when half-typed
 @app.route('/me')
