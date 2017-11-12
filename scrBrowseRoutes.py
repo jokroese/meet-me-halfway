@@ -96,7 +96,11 @@ countriesdict = {"Codes":marketcodes,
                 "Names":marketnames
                 }
 
+<<<<<<< Updated upstream
 name = 'Andorrrb'
+=======
+name = 'New Zealand'
+>>>>>>> Stashed changes
 """Convert the country to a code which we can use"""
 try:
     convertCountry(countriesZip,name)
@@ -193,6 +197,7 @@ def findMutual(qdict1,qdict2):
     prices = [i[1] for i in mutualQuotes]
     minPriceIndex = prices.index(min(prices))
     bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex])
+<<<<<<< Updated upstream
     return bestDest
 =======
     return quotesDict
@@ -203,3 +208,6 @@ def findMutual(qdict1,qdict2):
 
 
 
+=======
+    return bestDest
+>>>>>>> Stashed changes
