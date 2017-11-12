@@ -163,10 +163,11 @@ def findMutual(qdict1,qdict2,placeZip):
         templine = [destin1[index1], prices1[index1]+prices2[index2]]
         mutualQuotes.append(templine)
     
+    mutualQuotes=  sorted(mutualQuotes,key=lambda l:l[1])
     prices = [i[1] for i in mutualQuotes]
-    minPriceIndex = prices.index(min(prices))
-    bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex],placeZip)
-    return bestDest
+    # minPriceIndex = prices.index(min(prices))
+    # bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex],placeZip)
+    return mutualQuotes
 
 def quotesDict(browseQuotesURL):
     browsingurl = browseQuotesURL
