@@ -1,6 +1,6 @@
 ## Meet Me Halfway
 
-**Meet Me Halfway** is a website to help you meet your friends, family and clandestine lovers more often and for less money.
+**Meet Me Halfway** is a website to help you meet your friends, family and clandestine lovers more easily, more often and for less money. It finds the places that you could both fly to cheaply and gives you the cost.
 
 ### Details
 
