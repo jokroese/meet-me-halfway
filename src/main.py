@@ -1,6 +1,7 @@
 #--- Initialise the program
 # Flask side
 from flask import Flask, jsonify, render_template, request
+from scrBrowseRoutestidied import search_routes
 app = Flask(__name__)
 
 #Backend
@@ -11,8 +12,12 @@ api_key = 'ha177649362715475514428886582394'
 refurl = "http://partners.api.skyscanner.net/apiservices/"
 
 #--- Basic setup of html
-@app.route("/")
+@app.route("/",methods = ['GET','PUSH'])
 def main():
+	if request.method == 'PUSH':
+		adict = request.form
+		best_dest,placeZip = search_routes(adict["me"],adict["you"],adict["depart"],adict["return"],["oneway","UK","GBP","en-GB","Anywhere"])
+		
     return render_template('index.html')
 
 #--- Suggest place names when half-typed
