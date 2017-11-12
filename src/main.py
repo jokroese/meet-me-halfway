@@ -1,6 +1,6 @@
 #--- Initialise the program
 # Flask side
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
 
 #Backend
@@ -15,6 +15,11 @@ refurl = "http://partners.api.skyscanner.net/apiservices/"
 def main():
     return render_template('index.html')
 
+#--- Basic setup of jQuery
+<script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
 #--- Suggest place names when half-typed
 @app.route('/me')
 def suggester(query):
@@ -24,6 +29,10 @@ def suggester(query):
     autoSuggJSON = json.loads(autoSuggest.text)
     return [i['PlaceName'] for i in autoSuggJSON['Places']]
 
+
+@app.route("/hello/<username>")
+def hello_user(username):
+    return "Hello {}!".format(username)
 
 #--- When form is submitted, run algorithm to find cheapest flight and bring to new page
 @app.route('/showResults/')
