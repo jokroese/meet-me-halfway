@@ -15,9 +15,6 @@ refurl = "http://partners.api.skyscanner.net/apiservices/"
 def main():
     return render_template('index.html')
 
-if __name__ == "__main__":
-    app.run()
-
 #--- Suggest place names when half-typed
 @app.route('/me')
 def suggester(query):
@@ -29,6 +26,13 @@ def suggester(query):
 
 
 #--- When form is submitted, run algorithm to find cheapest flight and bring to new page
-@app.route('/submit')
-def showSignUp():
-    return render_template('result.html')
+@app.route('/showResults/')
+def showResults():
+    return render_template('results.html')
+
+
+
+
+#--- Make sure this comes last
+if __name__ == "__main__":
+    app.run()
