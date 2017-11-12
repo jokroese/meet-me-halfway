@@ -5,7 +5,8 @@ def search_routes(originCode1,originCode2,date,details):
     api_key = 'ha177649362715475514428886582394'
     refurl = "http://partners.api.skyscanner.net/apiservices/"
     browseQuotesURL = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0'
-    locales, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    locales, currencies, markets,countriesZip = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    airportinfo = get_airportinfo(api_key,refurl,browseQuotesURL)
     # country, currency
     # quotes1 = browse_quotes(airportinfo,k,"Anywhere",markets,date,request_parameters,browseQuotesURL,api_key )
     # quotes2 = browse_quotes(airportinfo,k,"Anywhere",markets,date,request_parameters,browseQuotesURL,api_key )
@@ -31,12 +32,12 @@ def suggester(refurl,api_key,query):
 
 def get_code_from_name(api_key,refurl,browseQuotesURL,name):
     """Gets airport code from a name"""
-    localesreq, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    airportinfo = get_airportinfo(api_key,refurl,browseQuotesURL)
     return airportinfo['AirportID'][airportinfo['Airport Name'].index(str(name))]
 
 def get_name_from_code(api_key,refurl,browseQuotesURL,name):
     """Gets airport name from a code"""
-    localesreq, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    airportinfo = get_airportinfo(api_key,refurl,browseQuotesURL)
     return airportinfo['Airport Name'][airportinfo['AirportID'].index(str(name))]
 
 def enterName(api_key,refurl,browseQuotesURL):
@@ -85,11 +86,13 @@ def get_skyscanner_data(api_key,refurl,browseQuotesURL):
         marketcodes.append(markets['Countries'][i]["Code"])
         i+=1
     del i;
-
     countriesZip = list(zip(marketcodes,marketnames))
     countriesdict = {"Codes":marketcodes,
                     "Names":marketnames
                     }
+    return localesreq, currencies, markets,countriesZip
+
+def get_airportinfo(api_key,refurl,browseQuotesURL):
     places = requests.get(refurl+"/geo/v1.0?apiKey="+api_key)
     places = json.loads(places.text)
     airportids = []
@@ -113,7 +116,7 @@ def get_skyscanner_data(api_key,refurl,browseQuotesURL):
                    "Airport City":airportcities,
                    "Airport Country":airportcountries
                   }
-    return localesreq, currencies, markets,countriesZip,airportinfo
+    return airportinfo
 
 def generateURL(basicurl,params,api_key):
 
