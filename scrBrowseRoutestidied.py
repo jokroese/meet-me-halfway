@@ -1,19 +1,26 @@
 import requests
 import json
-
+from getLiveInfoFunction import getLiveInfo
 def search_routes(originCode1,originCode2,date,details):
     api_key = 'ha177649362715475514428886582394'
     refurl = "http://partners.api.skyscanner.net/apiservices/"
     browseQuotesURL = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0'
-    locales, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    locales, currencies, markets,countriesZip = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    airportinfo = get_airportinfo(api_key,refurl,browseQuotesURL)
     # country, currency
     # quotes1 = browse_quotes(airportinfo,k,"Anywhere",markets,date,request_parameters,browseQuotesURL,api_key )
     # quotes2 = browse_quotes(airportinfo,k,"Anywhere",markets,date,request_parameters,browseQuotesURL,api_key )
     params1 = [details[0],details[1],details[2], originCode1, "Anywhere", date]
     params2 = [details[0],details[1],details[2], originCode2, "Anywhere", date]
-    qdict1,placeZip = quotesDict(generateURL(browseQuotesURL,params1,api_key))
-    qdict2,placeZip = quotesDict(generateURL(browseQuotesURL,params2,api_key))
+    qdict1,placeZip,quotesJSON = quotesDict(generateURL(browseQuotesURL,params1,api_key))
+    qdict2,placeZip,quotesJSON = quotesDict(generateURL(browseQuotesURL,params2,api_key))
     best_dest = findMutual(qdict1,qdict2,placeZip)
+    for element in best_dest:
+        for place in placeZip:
+            if element[0] == place[1]:
+                element[0] = place[0]
+    #for element in best_dest:
+    #   element[0] = airportinfo["AirportID"][element[0]]
     return best_dest
    
 def suggester(refurl,api_key,query):
@@ -25,12 +32,12 @@ def suggester(refurl,api_key,query):
 
 def get_code_from_name(api_key,refurl,browseQuotesURL,name):
     """Gets airport code from a name"""
-    localesreq, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    airportinfo = get_airportinfo(api_key,refurl,browseQuotesURL)
     return airportinfo['AirportID'][airportinfo['Airport Name'].index(str(name))]
 
 def get_name_from_code(api_key,refurl,browseQuotesURL,name):
     """Gets airport name from a code"""
-    localesreq, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    airportinfo = get_airportinfo(api_key,refurl,browseQuotesURL)
     return airportinfo['Airport Name'][airportinfo['AirportID'].index(str(name))]
 
 def enterName(api_key,refurl,browseQuotesURL):
@@ -79,11 +86,13 @@ def get_skyscanner_data(api_key,refurl,browseQuotesURL):
         marketcodes.append(markets['Countries'][i]["Code"])
         i+=1
     del i;
-
     countriesZip = list(zip(marketcodes,marketnames))
     countriesdict = {"Codes":marketcodes,
                     "Names":marketnames
                     }
+    return localesreq, currencies, markets,countriesZip
+
+def get_airportinfo(api_key,refurl,browseQuotesURL):
     places = requests.get(refurl+"/geo/v1.0?apiKey="+api_key)
     places = json.loads(places.text)
     airportids = []
@@ -107,7 +116,7 @@ def get_skyscanner_data(api_key,refurl,browseQuotesURL):
                    "Airport City":airportcities,
                    "Airport Country":airportcountries
                   }
-    return localesreq, currencies, markets,countriesZip,airportinfo
+    return airportinfo
 
 def generateURL(basicurl,params,api_key):
 
@@ -162,9 +171,8 @@ def findMutual(qdict1,qdict2,placeZip):
         index2 = destin2.index(i)
         templine = [destin1[index1], prices1[index1]+prices2[index2]]
         mutualQuotes.append(templine)
-    
-    mutualQuotes=  sorted(mutualQuotes,key=lambda l:l[1])
-    prices = [i[1] for i in mutualQuotes]
+    mutualQuotes=sorted(mutualQuotes,key=lambda l:l[1])
+    #prices = [i[1] for i in mutualQuotes]
     # minPriceIndex = prices.index(min(prices))
     # bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex],placeZip)
     return mutualQuotes
@@ -186,10 +194,19 @@ def quotesDict(browseQuotesURL):
     placeZip = []
     for i in quotesJSON['Places']:
         placeZip.append([i['Name'],i['PlaceId']])
-    return quotesDict, placeZip
-    
+    return quotesDict, placeZip,quotesJSON
+
+def get_name_from_id(quotesDict,the_id):
+    for element in quotesDict["Places"]:
+        if element["PlaceId"] ==the_id:
+            return element["Name"]
+
+
+
 k = "MAN" #Manchester
 q = "CPT"  # Second Origin Index
-date = "2017-11-12"
+date = "2017-11-15"
 details = ["UK","GBP","en-GB","Anywhere"] # country, currency, locale,destinationPlace
 best_dest= search_routes(k,q,date,details)
+liveParams = ["Economy","UK","GBP","en-GB","iata",k,q,date,"",1,0,0]
+#live_data = getLiveInfo(liveParams)
