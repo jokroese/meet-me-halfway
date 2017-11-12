@@ -14,14 +14,14 @@ refurl = "http://partners.api.skyscanner.net/apiservices/"
 #--- Basic setup of html
 @app.route("/", methods=['GET','POST'])
 def main():
-	print('Got into this function')
 	if request.method == 'POST':
-		print(request.form)
 		adict = request.form
+		some_things = adict["me"],adict["you"],adict["departure"],adict["return"],["oneway","UK","GBP","en-GB","Anywhere"]
 		best_dest,placeZip = search_routes(adict["me"],adict["you"],adict["departure"],adict["return"],["oneway","UK","GBP","en-GB","Anywhere"])
-		print("Hi")
-		print(best_dest)
-		print("Hello")
+		my_str = "Best Places to Meet: <br><br> "
+		for i in range(3):
+			my_str = my_str + "Airport: " + str(best_dest[i][0]) + ", Price: £" + str(best_dest[i][1]) + "<br>"
+		return my_str
 	return render_template('index.html')
 
 #--- Suggest place names when half-typed
