@@ -1,8 +1,8 @@
-import scrBrowseRoutestidied
+#import scrBrowseRoutestidied
 browseQuotesURL = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0'
 api_key = 'ha177649362715475514428886582394'
 #airportDatabasePathway = "C:/Users/georg/Documents/GitHub/meet-me-halfway/airports.csv"
-exampleInput = "me=Manchester&you=Cape+Town&departure=11%2F13%2F2017&return=11%2F28%2F2017&trip=round"
+exampleInput = "me=Manchester&you=Cape+Town&departure=11%2F13%2F2017&return=11%2F28%2F2017&trip=single"
 def inputToParams(onlineInput):
 	#onlineInput ="me=Manchester&you=Cape+Town&departure=11%2F13%2F2017&return=11%2F28%2F2017&trip=round"
 	inputParams=onlineInput.split("&")

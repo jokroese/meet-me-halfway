@@ -1,6 +1,12 @@
 import requests
 import json
 from getLiveInfoFunction import getLiveInfo
+from readOnlineInputFunction import inputToParams
+
+api_key = 'ha177649362715475514428886582394'
+refurl = "http://partners.api.skyscanner.net/apiservices/"
+browseQuotesURL = 'http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0'
+
 def search_routes(originCode1,originCode2,date,details):
     api_key = 'ha177649362715475514428886582394'
     refurl = "http://partners.api.skyscanner.net/apiservices/"
@@ -202,11 +208,20 @@ def get_name_from_id(quotesDict,the_id):
             return element["Name"]
 
 
-
-k = "MAN" #Manchester
-q = "CPT"  # Second Origin Index
-date = "2017-11-15"
+exampleInput = "me=Manchester&you=Cape+Town&departure=11%2F13%2F2017&return=11%2F28%2F2017&trip=single"
 details = ["UK","GBP","en-GB","Anywhere"] # country, currency, locale,destinationPlace
-best_dest= search_routes(k,q,date,details)
-liveParams = ["Economy","UK","GBP","en-GB","iata",k,q,date,"",1,0,0]
-#live_data = getLiveInfo(liveParams)
+output = inputToParams(exampleInput)
+#k = "MAN" #Manchester
+k = get_code_from_name(api_key,refurl,browseQuotesURL,output[0])
+#q = "CPT"  # Second Origin Index
+q = get_code_from_name(api_key,refurl,browseQuotesURL,output[1])
+#date = "2017-11-15"
+date = output[2]
+smallDate = output[2][:-3] #abbreviate it so we don't have a day, only year/month
+best_dest_array= search_routes(k,q,smallDate,details)
+best_dest = best_dest_array[0]
+destination_code = get_code_from_name(api_key,refurl,browseQuotesURL,bda[0][0])
+liveParams1 = ["Economy","UK","GBP","en-GB","iata",k,destination_code,date,"",1,0,0]
+liveParams2 = ["Economy","UK","GBP","en-GB","iata",q,destination_code,date,"",1,0,0]
+live_data1 = getLiveInfo(liveParams1)
+live_data2 = getLiveInfo(liveParams2)
