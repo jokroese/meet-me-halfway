@@ -1,7 +1,7 @@
 ## Meet Me Halfway
 
-**Meet Me Halfway** is a website to help you meet your friends, long-lost family and clandestine lovers in the cheapest way possible.
+**Meet Me Halfway** is a website to help you meet your friends, family and clandestine lovers more often and for less money.
 
 ### Details
 
-We are using the SkyScanner API, Flask, jQuery and Ajax.
+It uses the SkyScanner API with a python wrapper for the backend to read in flight information. We used Flask to create a front end user interface.
