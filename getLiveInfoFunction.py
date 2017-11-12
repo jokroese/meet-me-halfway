@@ -1,11 +1,12 @@
 import requests
 import json
 
-ip = requests.get('https://api.ipify.org')
-ip = ip.text
+
 
 def getLiveInfo(liveParams):
-    
+    api_key = 'ha177649362715475514428886582394'
+    ip = requests.get('https://api.ipify.org')
+    ip = ip.text
     """
     cabinclass, country, currency, locale, locationSchema, originplace, destinationplace, 
     outbounddate, inbounddate, adults, children, infants, apikey = liveParams
@@ -35,7 +36,7 @@ def getLiveInfo(liveParams):
       'adults':liveParams[9],
       'children':liveParams[10],
       'infants':liveParams[11],
-      'apikey':liveParams[12],
+      'apikey':api_key,
     }
     locationUrl = requests.post('http://partners.api.skyscanner.net/apiservices/pricing/v1.0', headers=headers, data=data)
     print(locationUrl.headers["Location"])
