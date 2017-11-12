@@ -53,54 +53,35 @@
                                 <h4>Find a place to meet <em>halfway</em>:</h4>
                                 <form id="form-submit" action="" method="get">
                                     <div class="row">
+
                                         <div class="col-md-3">
                                             <fieldset>
-                                                <label for="from">Me:</label>
-                                                <select required name='from' onchange='this.form.()'>
-                                                    <option value="">Select a location...</option>
-                                                    <option value="Cambodia">Cambodia</option>
-                                                    <option value="Hong Kong">Hong Kong</option>
-                                                    <option value="India">India</option>
-                                                    <option value="Japan">Japan</option>
-                                                    <option value="Korea">Korea</option>
-                                                    <option value="Laos">Laos</option>
-                                                    <option value="Myanmar">Myanmar</option>
-                                                    <option value="Singapore">Singapore</option>
-                                                    <option value="Thailand">Thailand</option>
-                                                    <option value="Vietnam">Vietnam</option>
-                                                </select>
+                                                <label for="me">Me</label>
+                                                <input name="inputName" type="name" class="form-control" id="inputName" placeholder="Country, city or airport" required autofocus>
                                             </fieldset>
                                         </div>
+
                                         <div class="col-md-3">
                                             <fieldset>
-                                                <label for="to">You:</label>
-                                                <select required name='to' onchange='this.form.()'>
-                                                    <option value="">Select a location...</option>
-                                                    <option value="Cambodia">Cambodia</option>
-                                                    <option value="Hong Kong">Hong Kong</option>
-                                                    <option value="India">India</option>
-                                                    <option value="Japan">Japan</option>
-                                                    <option value="Korea">Korea</option>
-                                                    <option value="Laos">Laos</option>
-                                                    <option value="Myanmar">Myanmar</option>
-                                                    <option value="Singapore">Singapore</option>
-                                                    <option value="Thailand">Thailand</option>
-                                                    <option value="Vietnam">Vietnam</option>
-                                                </select>
+                                                <label for="you">You</label>
+                                                <input name="inputName" type="name" class="form-control" id="inputName" placeholder="Country, city or airport" required autofocus>
                                             </fieldset>
                                         </div>
+
                                         <div class="col-md-3">
                                             <fieldset>
-                                                <label for="departure">Departure date:</label>
-                                                <input name="deparure" type="text" class="form-control date" id="deparure" placeholder="Select date..." required="" onchange='this.form.()'>
+                                                <label for="departure">Departure date</label>
+                                                <input name="departure" type="text" class="form-control date" id="departure" placeholder="Select date..." required="" onchange='this.form.()'>
                                             </fieldset>
                                         </div>
+
                                         <div class="col-md-3">
                                             <fieldset>
-                                                <label for="return">Return date:</label>
+                                                <label for="return">Return date</label>
                                                 <input name="return" type="text" class="form-control date" id="return" placeholder="Select date..." required="" onchange='this.form.()'>
                                             </fieldset>
                                         </div>
+
                                         <div class="col-md-3">
                                             <div class="radio-select">
                                                 <div class="row">
@@ -109,12 +90,13 @@
                                                         <input type="radio" name="trip" id="round" value="round" required="required"onchange='this.form.()'>
                                                     </div>
                                                     <div class="col-md-6 col-sm-6 col-xs-6">
-                                                        <label for="oneway">Oneway</label>
+                                                        <label for="oneway">One way</label>
                                                         <input type="radio" name="trip" id="oneway" value="one-way" required="required"onchange='this.form.()'>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="col-md-3 col-md-offset-6">
                                             <fieldset>
                                                 <button type="submit" id="form-submit" class="btn">Meet Halfway</button>
