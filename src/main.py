@@ -15,11 +15,6 @@ refurl = "http://partners.api.skyscanner.net/apiservices/"
 def main():
     return render_template('index.html')
 
-#--- Basic setup of jQuery
-<script type=text/javascript>
-  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-</script>
-
 #--- Suggest place names when half-typed
 @app.route('/me')
 def suggester(query):
