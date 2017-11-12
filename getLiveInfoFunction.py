@@ -45,16 +45,21 @@ def getLiveInfo(liveParams):
     relevant booking details.
     
     """
-    searchResults = requests.get(locationUrl.headers['Location'] + "?apiKey="+ api_key)
-    searchResults = json.loads(searchResults.text)
-    departureTimes = [element["Departure"] for element in searchResults['Legs']]
-    arrivalTimes = [element["Arrival"] for element in searchResults['Legs']]
-    pricingOptions = [element["PricingOptions"] for element in searchResults["Itineraries"]]
-    prices = [i[0]["Price"] for i in pricingOptions]
-    deepLinks = [i[0]["DeeplinkUrl"] for i in pricingOptions]
-    liveInfo = []
-    for i in range(len(departureTimes)):
-        templine = [departureTimes[i],arrivalTimes[i],prices[i],deepLinks[i]]
-        liveInfo.append(templine)
-		
-    return liveInfo
+	try:
+		searchResults = requests.get(locationUrl.headers['Location'] + "?apiKey="+ api_key)
+		searchResults = json.loads(searchResults.text)
+		departureTimes = [element["Departure"] for element in searchResults['Legs']]
+		arrivalTimes = [element["Arrival"] for element in searchResults['Legs']]
+		pricingOptions = [element["PricingOptions"] for element in searchResults["Itineraries"]]
+		prices = [i[0]["Price"] for i in pricingOptions]
+		deepLinks = [i[0]["DeeplinkUrl"] for i in pricingOptions]
+		liveInfo = []
+		for i in range(len(departureTimes)):
+			templine = [departureTimes[i],arrivalTimes[i],prices[i],deepLinks[i]]
+			liveInfo.append(templine)
+
+		#return liveInfo
+
+	except:
+		print("No flights available between these locations on this day. Please choose another day")
+		return False
