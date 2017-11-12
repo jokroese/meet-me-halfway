@@ -16,7 +16,40 @@ def search_routes(originCode1,originCode2,date,details):
     best_dest = findMutual(qdict1,qdict2,placeZip)
     return best_dest
    
+def suggester(refurl,api_key,query):
+    """Returns suggestions if the input is incorrect"""
+    #query = 'fran'
+    autoSuggest = requests.get(refurl+"autosuggest/v1.0/RU/USD/en-GB?query="+query+"&apiKey="+api_key)
+    autoSuggJSON = json.loads(autoSuggest.text)
+    return [i['PlaceName'] for i in autoSuggJSON['Places']]
 
+def get_code_from_name(api_key,refurl,browseQuotesURL,name):
+    """Gets airport code from a name"""
+    localesreq, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    return airportinfo['AirportID'][airportinfo['Airport Name'].index(str(name))]
+
+def get_name_from_code(api_key,refurl,browseQuotesURL,name):
+    """Gets airport name from a code"""
+    localesreq, currencies, markets,countriesZip,airportinfo = get_skyscanner_data(api_key,refurl,browseQuotesURL)
+    return airportinfo['Airport Name'][airportinfo['AirportID'].index(str(name))]
+
+def enterName(api_key,refurl,browseQuotesURL):
+    """Gives you the code for the airport you want to go to... plus suggestions"""
+    airport = input('Enter the airport you are planning to fly from... \n')
+    try:
+        get_code_from_name(api_key,refurl,browseQuotesURL,airport)
+        return get_code_from_name(api_key,refurl,browseQuotesURL,airport)
+    except:
+        #if not a recognised name, suggest names which they may have meant
+        print(airport+' is not a recognised place')
+        if suggester(refurl,api_key,airport) is None:
+            print('Did you mean....')
+            suggester(airport[0:4])
+        else: 
+            print('Did you mean...')
+            suggestions = suggester(refurl,api_key,airport)
+            for i in suggestions:
+                print(i)
    
 def get_skyscanner_data(api_key,refurl,browseQuotesURL):
     locdata = {'Code':"codeval","Name":"nameval"}
@@ -34,7 +67,7 @@ def get_skyscanner_data(api_key,refurl,browseQuotesURL):
     currency = 'USD'
     currencies = requests.get(refurl+"reference/v1.0/currencies?apiKey="+api_key)
 
-    #%%Get info  on markets
+    #Get info  on markets
     markets = requests.get(refurl + "reference/v1.0/countries/" + locale + "?apiKey=" + api_key)
     markets = json.loads(markets.text)
 
@@ -130,10 +163,11 @@ def findMutual(qdict1,qdict2,placeZip):
         templine = [destin1[index1], prices1[index1]+prices2[index2]]
         mutualQuotes.append(templine)
     
+    mutualQuotes=  sorted(mutualQuotes,key=lambda l:l[1])
     prices = [i[1] for i in mutualQuotes]
-    minPriceIndex = prices.index(min(prices))
-    bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex],placeZip)
-    return bestDest
+    # minPriceIndex = prices.index(min(prices))
+    # bestDest = get_place_name_from_code([i[0] for i in mutualQuotes][minPriceIndex],placeZip)
+    return mutualQuotes
 
 def quotesDict(browseQuotesURL):
     browsingurl = browseQuotesURL
