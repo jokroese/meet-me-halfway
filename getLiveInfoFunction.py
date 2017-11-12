@@ -1,7 +1,7 @@
 import requests
 import json
 
-
+exampleLiveParams = ["Economy","UK","GBP","en-GB","iata",'MAN','MXP','2017-11-13',"",1,0,0]
 
 def getLiveInfo(liveParams):
     api_key = 'ha177649362715475514428886582394'
