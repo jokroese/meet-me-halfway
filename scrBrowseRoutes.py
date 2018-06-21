@@ -3,7 +3,7 @@
 import requests
 import json
 
-api_key = 'ha177649362715475514428886582394'
+api_key = ''
 refurl = "http://partners.api.skyscanner.net/apiservices/"
 
 #%%Define some functions
